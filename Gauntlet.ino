@@ -1,20 +1,15 @@
 /*
 */
 // constants //
-const int buttonPin = 4;          // PIN for switch to ground
-const int tonePin = 9;            // PIN for Speaker to ground through 100ohm resistor
-const int ledPin =  5;            // PIN for LED OUTPUT
+const int buttonPin = 13;          // PIN for switch to ground
+const int tonePin = 3;            // PIN for Speaker to ground through 100ohm resistor
+const int ledPin =  9;            // PIN for LED OUTPUT
 const int ledBoard =  13;         // Onboard LED (indicates top of ramp)
 const int delaySpeed = 4;         // Time between next step of the change       
 const int sprayDuration = 2000;    // Intervals the spray-jet is on for (2sec ~= 400)
 const int pwmIntervals = 300;     // Howmany times it changes brightness/sound frequency
 const int toneFreqLow   = 3250;   // Tone Freqency at bottom of Ramp-up
 const int toneFreqHigh  = 5500;   // Tone Frequency at top of Ramp-Up
-
-//const int pwmIntervals = 2000;     // Howmany times it changes brightness/sound frequency
-//const int toneFreqLow   = 5000;   // Tone Freqency at bottom of Ramp-up
-//const int toneFreqHigh  = 25000;   // Tone Frequency at top of Ramp-Up
-
 
 // --------------------------------------------------------------------------------------//
 // variables //
@@ -48,29 +43,22 @@ void loop() {
     } else {
       // FIRE //
       rampDown = 0;
-      noTone(tonePin);    
-     
+      noTone(tonePin);
       // Handle the Sprayer
       if (sprayDuty > 1){
         digitalWrite(ledBoard, HIGH);
         sprayDuty--;
-//        tone(10, 2500);
-//        delay(delaySpeed);
-//        tone(10, 3000);
       } else {
         // FIRE //
         digitalWrite(ledBoard, LOW);
-        //noTone(10);    
       }
     }
   } else {
     // FADE OUT //
     digitalWrite(ledBoard, LOW);
     sprayDuty = sprayDuration;
-    
     if (pwmInt > 0 ){
       pwmInt--;
-//      setTone(pwmInt);
       fadeValue = pow(2, (pwmInt / Rled)) -1;
       if (rampDown > 0){
           setTone(pwmInt);
@@ -82,11 +70,9 @@ void loop() {
   analogWrite(ledPin, fadeValue);
   delay(delaySpeed);
 }
-
 // Helper function sets the tone frequency based on interval-step
 void setTone(int interval){
   int freqRange = (toneFreqHigh-toneFreqLow);
   toneValue = toneFreqLow + ( (freqRange/pwmIntervals) * interval );
   tone(tonePin, toneValue);
 }
-
